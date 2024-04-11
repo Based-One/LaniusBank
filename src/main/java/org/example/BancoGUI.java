@@ -2,18 +2,20 @@ package org.example;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 public class BancoGUI extends JFrame {
     private JScrollPane scrollPane1;
+    private final JTextField camp5;
 public String[] solicitarDatos6(String dato0, String dato1, String dato2, String dato3,String dato4 ){
     JTextField camp1 = new JTextField(5);
     JTextField camp2 = new JTextField(5);
     JTextField camp3 = new JTextField(5);
     JTextField camp4 = new JTextField(5);
-    JTextField camp5 = new JTextField(5);
 JRadioButton YE  = new JRadioButton("SI");
 JRadioButton NO = new JRadioButton("NO");
     JRadioButton W = new JRadioButton("F");
@@ -321,6 +323,9 @@ else if (M.isSelected()){
     private JPanel panel1;
     private JButton CreaCl;
     private JButton mostrarClientesButton;
+    private final HashMap<Integer,Clientes> clients;
+    private final HashMap<String,String> paises;
+    JComboBox<String> comboBox ;
 //    private boolean bankActive;
 //    private Jra
 
@@ -344,6 +349,7 @@ else if (M.isSelected()){
         frame.setVisible(true);
         Image imageIcon = new ImageIcon("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG1 (2).jpg").getImage();
         frame.setIconImage(imageIcon);
+        frame.setResizable(false);
     }
     public BancoGUI()
     {
@@ -353,7 +359,10 @@ else if (M.isSelected()){
         this.millonarios = new Listas<>();
 //        this.bankActive = false;
         this.listasExtrac = new Listas<>();
-        Listas<Clientes> clients = new Listas<>();
+        this.clients = new HashMap<>();
+        this.paises = new HashMap<>();
+        this.camp5 = new JTextField(5);
+        this.comboBox = new JComboBox<>();
 
         SolicitudDeposito.addActionListener(e -> {
             boolean a = false;
@@ -766,6 +775,10 @@ boolean a = true;
                         JOptionPane.showMessageDialog(null,"Negativos?");
                         return;
                     }
+                    if (clients.isEmpty()){
+                        JOptionPane.showMessageDialog(null,"No hay clientes");
+                        return;
+                    }
 
                         AhorroListas.addElement(new CuentasAhorros(idNum, saldo));
                         JOptionPane.showMessageDialog(null, "Cuenta con ID: '" + datosIngresados[0] + "' ha sido creada con exito");
@@ -937,10 +950,13 @@ boolean a = true;
 //            Clientes ho = new Clientes(clients.longitud(),Integer.parseInt(ingresarDatos[0]),ingresarDatos[1],ingresarDatos[2],ingresarDatos[3],ingresarDatos[4]);
             Clientes ho;
         if (ingresarDatos[4].equals("SI")){
-            ho = new Extranjero(clients.longitud(),Integer.parseInt(ingresarDatos[0]),ingresarDatos[1],ingresarDatos[2],ingresarDatos[3],"");
-            String a = JOptionPane.showInputDialog(null,"Ingrese su nacionalidad");
-            ho.setNacionalidad(a);
-            clients.addElement(ho);
+            JPanel jPanel = combobox();
+            JOptionPane.showMessageDialog(null,jPanel,"Ingrese su nacionalidad",JOptionPane.PLAIN_MESSAGE);
+            String nacionalidad = (String) comboBox.getSelectedItem();
+            ho = new Extranjero(clients.size(),Integer.parseInt(ingresarDatos[0]),ingresarDatos[1],ingresarDatos[2],ingresarDatos[3],"");
+
+            ho.setNacionalidad(nacionalidad);
+            clients.put(Integer.parseInt(ingresarDatos[0]),ho);
 
         }
 //        Clientes ho = new Clientes(clients.longitud(),Integer.parseInt(ingresarDatos[0]),ingresarDatos[1],ingresarDatos[2],ingresarDatos[3],ingresarDatos[4]);
@@ -950,8 +966,8 @@ boolean a = true;
             @Override
             public void actionPerformed(ActionEvent e) {
                 StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < clients.longitud(); i++) {
-                    builder.append(clients.obtener(i).id).append(clients.obtener(i).nacionalidad);
+                for (Clientes cliente: clients.values()) {
+                    builder.append(cliente.getIdben()).append(cliente.getNacionalidad());
                 }
                 JOptionPane.showMessageDialog(null,builder.toString());
             }
@@ -992,12 +1008,32 @@ boolean a = true;
         }
         return radio;
     }
-    private static JFrame combobox(String[] paises){
+    private  JPanel combobox(){
+        String[] paises1 = {"Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Barbados", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Ciudad del Vaticano", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guyana", "Guinea", "Guinea ecuatorial", "Guinea-Bisáu", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Macedonia del Norte", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumanía", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Suazilandia", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"
+        };
+        String[] codPais  = {"Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés","Barbados", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre","Ciudad del Vaticano", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guyana", "Guinea", "Guinea ecuatorial", "Guinea-Bisáu", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Macedonia del Norte", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumanía", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Suazilandia", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"
+        };
 
+        for (int i = 0; i < paises1.length; i++) {
+            paises.put(codPais[i],paises1[i]);
+        }
+        JTextField c5 = new JTextField(10);
+
+
+
+
+        JPanel pael = new JPanel();
         JFrame frame = new JFrame("Ejemplo de JComboBox");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300, 300);
-        return null;
+        comboBox = new JComboBox<>(paises1);
+        comboBox.addActionListener(e -> {
+            c5.setText(String.valueOf(comboBox.getSelectedItem()));
+
+
+        });
+        pael.add(comboBox);
+        return pael;
     }
 
 
