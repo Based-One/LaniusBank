@@ -9,13 +9,13 @@ protected String direccion;
 protected String nacionalidad;//La cuenta existe,
 
 
-    public Clientes(int id, int idben, String name, String sex, String direccion, String nacionalidad) {
+    public Clientes(int id, int idben, String name, String sex, String direccion, String paisProcedencia) {
         this.id = id;
         this.idben = idben;
         this.name = name;
         this.sex = sex;
         this.direccion = direccion;
-        this.nacionalidad = nacionalidad;
+        this.nacionalidad = paisProcedencia;
 
     }
 

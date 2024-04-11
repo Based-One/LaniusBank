@@ -3,8 +3,8 @@ package org.example;
 public class Extranjero extends Clientes
 {
     protected Listas<CuentasAhorros> clistas;
-    public Extranjero(int id, int idben, String name, String sex, String direccion, String nacionalidad) {
-        super(id, idben, name, sex, direccion, nacionalidad);
+    public Extranjero(int id, int idben, String name, String sex, String direccion, String paisProcedencia) {
+        super(id, idben, name, sex, direccion, paisProcedencia);
         this.clistas = new Listas<>();
     }
 
