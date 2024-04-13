@@ -1,5 +1,8 @@
 package org.example;
-public class Listas<A> implements Imetodos<A> {
+
+import java.io.Serializable;
+
+public class Listas<A> implements Imetodos<A>, Serializable {
     private Nodos<A> cabeza;
     private int size;
 

@@ -1,14 +1,12 @@
 package org.example;
 
 
-public class SolicitudesDeposito {
+public class SolicitudesDeposito extends Solicitudes{
     protected int iden;
-    protected float MonCant;
     protected String nombre;
-    public SolicitudesDeposito(int iden, float monCant, String nombre) {
-        this.iden = iden;
-        MonCant = monCant;
-        this.nombre = nombre;
+
+    public SolicitudesDeposito(int numid, String nombre,float monto) {
+        super(numid, nombre, monto);
     }
 
     public int getIden() {
@@ -18,15 +16,6 @@ public class SolicitudesDeposito {
     public void setIden(int iden) {
         this.iden = iden;
     }
-
-    public float getMonCant() {
-        return MonCant;
-    }
-
-    public void setMonCant(float monCant) {
-        MonCant = monCant;
-    }
-
     public String getNombre() {
         return nombre;
     }

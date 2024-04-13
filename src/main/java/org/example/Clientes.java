@@ -7,7 +7,7 @@ protected String name;
 protected String sex;
 protected String direccion;
 protected String nacionalidad;//La cuenta existe,
-
+ protected Listas<CuentasAhorros> clistas;
 
     public Clientes(int id, int idben, String name, String sex, String direccion, String paisProcedencia) {
         this.id = id;
@@ -16,11 +16,20 @@ protected String nacionalidad;//La cuenta existe,
         this.sex = sex;
         this.direccion = direccion;
         this.nacionalidad = paisProcedencia;
+        this.clistas = new Listas<>();
 
     }
 
     public int getIdben() {
         return idben;
+    }
+
+    public Listas<CuentasAhorros> getClistas() {
+        return clistas;
+    }
+
+    public void setClistas(Listas<CuentasAhorros> clistas) {
+        this.clistas = clistas;
     }
 
     public void setIdben(int idben) {

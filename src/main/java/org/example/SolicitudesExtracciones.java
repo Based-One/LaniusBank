@@ -1,28 +1,20 @@
 package org.example;
 
-public class SolicitudesExtracciones {
-    private String nombre;
-    private int numid;
-    private char sexo;
+public class SolicitudesExtracciones extends Solicitudes {
     private String nacionalidad;
     private String direccion;
-    private String monto;
+    private char sex;
 
 
-    public SolicitudesExtracciones(String nombre, int numid, char sexo, String monto) {
-        this.nombre = nombre;
-        this.numid = numid;
-        this.sexo = sexo;
-        this.monto = monto;
-    }
-
-    public SolicitudesExtracciones(String nombre, int numid, char sexo, String monto, String nacionalidad, String direccion) {
-        this.nombre = nombre;
-        this.numid = numid;
-        this.sexo = sexo;
+    public SolicitudesExtracciones(int numid, String nombre, float monto, char sex, String nacionalidad, String direccion) {
+        super(numid, nombre, monto);
         this.nacionalidad = nacionalidad;
+        this.sex = sex;
         this.direccion = direccion;
-        this.monto = monto;
+    }
+    public SolicitudesExtracciones(int numid, String nombre, float monto){
+        super(numid,nombre,monto);
+
     }
 
     public String getNacionalidad() {
@@ -40,37 +32,24 @@ public class SolicitudesExtracciones {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
+    /*
+    public SolicitudesExtracciones(String nombre, int numid, char sexo, String monto, String nacionalidad, String direccion) {
         this.nombre = nombre;
-    }
-
-    public int getNumid() {
-        return numid;
-    }
-
-    public void setNumid(int numid) {
         this.numid = numid;
-    }
-
-    public char getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(char sexo) {
         this.sexo = sexo;
-    }
-
-
-    public String getMonto() {
-        return monto;
-    }
-
-    public void setMonto(String monto) {
+        this.nacionalidad = nacionalidad;
+        this.direccion = direccion;
         this.monto = monto;
     }
+
+
+ */
+    public char getSex() {
+        return sex;
+    }
+
+    public void setSex(char sex) {
+        this.sex = sex;
+    }
+
 }

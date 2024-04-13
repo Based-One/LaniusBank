@@ -27,7 +27,7 @@ public int verificarCuenta(Listas<CuentasAhorros> elemento, Listas<SolicitudesDe
             else {
                 System.out.println("No tiene una cuenta de ahorros, en un momento se le creara una");
                 int x = deposito.obtener(0).getIden();
-                float y = deposito.obtener(0).getMonCant();
+                float y = deposito.obtener(0).getMonto();
                 pos =elemento.longitud();
                 elemento.addElement(new CuentasAhorros(x,y));
                 return pos+1;
@@ -113,7 +113,11 @@ return 0;
 //        }
 //    }
 //}
-//    public void divisas()
+    public void divisas(){
+           if (!solicitudesDeposito.esVacia()){
+
+           }
+    }
 public void atenderDepos(Listas<CuentasAhorros> cuentasAhorro, Listas<SolicitudesDeposito> depositos) {
     if (depositos.esVacia()) {
         System.out.println("No hay solicitudes de depósito pendientes.");
@@ -124,7 +128,7 @@ public void atenderDepos(Listas<CuentasAhorros> cuentasAhorro, Listas<Solicitude
     while (j < depositos.longitud()) {
         SolicitudesDeposito solicitud = depositos.obtener(j);
         int idBeneficiario = solicitud.getIden();
-        float montoDeposito = solicitud.getMonCant();
+        float montoDeposito = solicitud.getMonto();
 
         boolean encontrado = false;
         for (int i = 0; i < cuentasAhorro.longitud(); i++) {
@@ -159,13 +163,13 @@ public void atenderDepos(Listas<CuentasAhorros> cuentasAhorro, Listas<Solicitude
 
 
                 if (extracciones.obtener(j).getNumid() == cuentasAhorros.obtener(i).getIdBen()) {
-                    if (Float.parseFloat(extracciones.obtener(j).getMonto()) > cuentasAhorros.obtener(i).getSaldoAct()) {
+                    if (extracciones.obtener(j).getMonto() > cuentasAhorros.obtener(i).getSaldoAct()) {
                         System.out.println("No hay fondos suficientes: " + cuentasAhorros.obtener(i).getSaldoAct());
                         extracciones.eliminarIndex(j);
 
-                    } else if (Integer.parseInt(extracciones.obtener(j).getMonto()) <= cuentasAhorros.obtener(i).getSaldoAct()) {
-                        cuentasAhorros.obtener(i).setSaldoAct(cuentasAhorros.obtener(i).getSaldoAct() - Integer.parseInt(extracciones.obtener(j).getMonto()));
-                        System.out.println("Se ha retirado: " + Integer.parseInt(extracciones.obtener(j).getMonto()) + " de su cuenta existosamente");
+                    } else if (extracciones.obtener(j).getMonto() <= cuentasAhorros.obtener(i).getSaldoAct()) {
+                        cuentasAhorros.obtener(i).setSaldoAct(cuentasAhorros.obtener(i).getSaldoAct() - extracciones.obtener(j).getMonto());
+                        System.out.println("Se ha retirado: " + extracciones.obtener(j).getMonto() + " de su cuenta existosamente");
                         System.out.println("Saldo restante: " + cuentasAhorros.obtener(i).getSaldoAct());
                         extracciones.eliminarIndex(j);
                     }
@@ -214,9 +218,9 @@ Listas<CuentasAhorros> millonarios = new Listas<>();
         // Agregar algunas cuentas de ahorros y solicitudes de depósito
         cuentasAhorros.addElement(new CuentasAhorros(1, 1000));
         cuentasAhorros.addElement(new CuentasAhorros(2, 2000));
-        solicitudesDeposito.addElement(new SolicitudesDeposito(1, 15000000, "María"));
-        solicitudesDeposito.addElement(new SolicitudesDeposito(5, 2500, "Ana"));
-    solicitudesDeposito.addElement(new SolicitudesDeposito(2,2000000,"Jorgito"));
+//        solicitudesDeposito.addElement(new SolicitudesDeposito(1, 15000000, "María"));
+//        solicitudesDeposito.addElement(new SolicitudesDeposito(5, 2500, "Ana"));
+//    solicitudesDeposito.addElement(new SolicitudesDeposito(2,2000000,"Jorgito"));
 
         // Crear una instancia del banco
         Banco banco = new Banco(cuentasAhorros, solicitudesDeposito);

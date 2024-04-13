@@ -1,6 +1,6 @@
 package org.example;
 
-public class CuentasAhorros {
+public class CuentasAhorros  {
     private int idBen;
     private float saldoAct;
     private int pos;
