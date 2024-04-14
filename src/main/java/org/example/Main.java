@@ -17,4 +17,8 @@ Y de cada deposito ID de la cuenta ID del cliente y el monto, y el nombre de qui
 Numero de la cuenta para sacare dinero
 Usted desea crear una cuenta?
 Viisualizar los logs de los movimientos
+
+
+Falta Hacer que a la hora de realizar un deposito o retiro, este busque la cuenta del cliente y haga la accion
+Falta agregar el metodo de las divisas
  */

@@ -2,20 +2,21 @@ package org.example;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
+import static org.example.RegistroTransacciones.registrarTransaccion;
+
 public class BancoGUI extends JFrame {
     private JScrollPane scrollPane1;
-    private final JTextField camp5;
+
 public String[] solicitarDatos6(String dato0, String dato1, String dato2, String dato3,String dato4 ){
     JTextField camp1 = new JTextField(5);
     JTextField camp2 = new JTextField(5);
     JTextField camp3 = new JTextField(5);
     JTextField camp4 = new JTextField(5);
+     JTextField camp5 = new JTextField(5);
 JRadioButton YE  = new JRadioButton("SI");
 JRadioButton NO = new JRadioButton("NO");
     JRadioButton W = new JRadioButton("F");
@@ -157,6 +158,51 @@ else if (M.isSelected()){
         }
         return null;
     }
+    public String[] solicitarDatos2r(String mensaje1, String mensaje2) {
+    JTextField campo1 = new JTextField(5);
+        JTextField campo2 = new JTextField(5);
+        JComboBox<String> comboBox1= comboBox;
+
+        Font font = new Font("Times New Roman", Font.PLAIN, 14);
+        campo1.setFont(font);
+        campo2.setFont(font);
+
+        // Create labels with padding and custom font
+        JLabel label1 = new JLabel(mensaje1);
+        label1.setBorder(new EmptyBorder(10, 10, 10, 10));
+        label1.setFont(font);
+
+        JLabel label2 = new JLabel(mensaje2);
+        label2.setBorder(new EmptyBorder(10, 10, 10, 10));
+        label2.setFont(font);
+
+        // Create a panel with a GridBagLayout
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panel.setBackground(Color.ORANGE);
+
+        // Add the labels and text fields to the panel
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.5;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        panel.add(label1, constraints);
+        constraints.gridy = 1;
+        panel.add(comboBox1, constraints);
+        constraints.gridy = 2;
+        panel.add(label2, constraints);
+        constraints.gridy = 3;
+        panel.add(campo2, constraints);
+        comboBox.addActionListener(e -> campo1.setText(String.valueOf(comboBox.getSelectedItem())));
+
+        int result = JOptionPane.showConfirmDialog(null, panel,
+                "Ingrese los datos", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            return new String[]{campo1.getText(), campo2.getText()};
+        }
+        return null;
+    }
     public String[] solicitarDatos1(String mensaje1) {
         JTextField campo1 = new JTextField(5);
 
@@ -273,7 +319,7 @@ else if (M.isSelected()){
         label4.setBorder(new EmptyBorder(10,10,10,10));
         label4.setFont(font);
 
-        JPanel panel= new JPanel();
+        JPanel panel= new JPanel(new GridBagLayout());
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         panel.setBackground(Color.ORANGE);
 
@@ -305,6 +351,90 @@ else if (M.isSelected()){
         }
         return null;
     }
+    public String[] solicitarDatos4r(String mensaje1, String mensaje2, String mensaje3, String mensaje4) {
+
+        JTextField camp1 = new JTextField(5);
+        JTextField camp2 = new JTextField(5);
+        JTextField camp3 = new JTextField(5);
+        JTextField camp4 = new JTextField(5);
+        JRadioButton W = new JRadioButton("F");
+        JRadioButton M = new JRadioButton("M");
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(W);
+        buttonGroup.add(M);
+
+        Font font = new Font("Times New Roman", Font.PLAIN, 14);
+        camp1.setFont(font);
+        camp2.setFont(font);
+        camp3.setFont(font);
+        camp4.setFont(font);
+
+        JLabel label1 = new JLabel(mensaje1);
+        label1.setBorder(new EmptyBorder(10, 10, 10, 10));
+        label1.setFont(font);
+
+        JLabel label2 = new JLabel(mensaje2);
+        label2.setBorder(new EmptyBorder(10, 10, 10, 10));
+        label2.setFont(font);
+
+        JLabel label3 = new JLabel(mensaje3);
+        label3.setBorder(new EmptyBorder(10, 10, 10, 10));
+        label3.setFont(font);
+
+        JLabel label4 = new JLabel(mensaje4);
+        label4.setBorder(new EmptyBorder(10,10,10,10));
+        label4.setFont(font);
+
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panel.setBackground(Color.ORANGE);
+
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.5;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        panel.add(label1, constraints);
+
+        constraints.gridy = 1;
+        panel.add(camp1, constraints);
+
+        constraints.gridy = 2;
+        panel.add(label2, constraints);
+
+        constraints.gridy = 3;
+        panel.add(camp2, constraints);
+
+        constraints.gridy = 4;
+        panel.add(label3, constraints);
+
+        constraints.gridy = 5;
+        panel.add(camp3, constraints);
+
+        constraints.gridy = 6;
+        panel.add(label4, constraints);
+
+        constraints.gridy = 7;
+        panel.add(radiobutton(W, M), constraints);
+
+        ActionListener actionListener = e -> {
+            if (W.isSelected()) {
+                camp4.setText("F");
+            } else if (M.isSelected()) {
+                camp4.setText("M");
+            }
+        };
+        W.addActionListener(actionListener);
+        M.addActionListener(actionListener);
+
+        int result = JOptionPane.showConfirmDialog(null, panel,
+                "Ingrese los datos", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            return new String[]{camp1.getText(), camp2.getText(), camp3.getText(), camp4.getText()};
+        }
+        return null;
+    }
 
     private final Listas<CuentasAhorros> AhorroListas;
     private final Listas<SolicitudesDeposito> solicitudesDepositoListas;
@@ -312,7 +442,7 @@ else if (M.isSelected()){
     private final Listas<SolicitudesExtracciones> listasExtrac;
     private final Banco banco;
     private JPanel mainPanel;
-    private JButton SolicitudDeposito,CrearAh,Mill,Atender,MosAho,MosSoli,MosCueCli,MostrarMIll,mostrarClientes;
+    private JButton SolicitudDeposito,CrearAh,Mill,Atender,MosAho,MosSoli,MosCueCli,MostrarMIll,mostrarClientes, prueba;
     private JScrollPane scroll1,scroll2,scroll3;
     private JButton CrearExtrac;
     private JButton atenderExtr;
@@ -324,6 +454,7 @@ else if (M.isSelected()){
     private JButton mostrarClientesButton;
     private final HashMap<Integer,Clientes> clients;
     private final HashMap<String,String> paises;
+
     JComboBox<String> comboBox ;
 //    private boolean bankActive;
 //    private Jra
@@ -360,71 +491,56 @@ else if (M.isSelected()){
         this.listasExtrac = new Listas<>();
         this.clients = new HashMap<>();
         this.paises = new HashMap<>();
-        this.camp5 = new JTextField(5);
         this.comboBox = new JComboBox<>();
-
         SolicitudDeposito.addActionListener(e -> {
-            boolean a = false;
             while (true) {
                 try{
+                    String[] datosIngresados1 = solicitarDatos1("Ingrese el ID del beneficiario");
+                    int d = Integer.parseInt(datosIngresados1[0]);
+if (!clients.containsKey(d)){
+    JOptionPane.showMessageDialog(null,"ID incorrecto o no existe");
+    break;
+}
+                    if (clients.get(d).clistas.esVacia() && clients.get(d) != null){
+                        String[] datosIngresados2 = solicitarDatos2("Ingrese el nombre", "Ingrese el monto");
+                        solicitudesDepositoListas.addElement(new SolicitudesDeposito(Integer.parseInt(datosIngresados1[0]),clients.get(Integer.parseInt(datosIngresados1[0])).clistas.longitud(),datosIngresados2[0],Float.parseFloat(datosIngresados2[1])));
+                        JOptionPane.showMessageDialog(null, "Solicitud de depósito ha sido realizada con exito");
+
+                        break;
+                    }
 
 
-                    String[] datosIngresados = solicitarDatos3("Ingrese el ID del beneficiario:", "Ingrese el nombre", "Ingrese el monto:");
+
+
+
+
+                    String[] datosIngresados = solicitarDatos4("Ingrese el ID del beneficiario:","Numero de la cuenta", "Ingrese el nombre", "Ingrese el monto:");
+
                     if (datosIngresados != null) {
                         if (Integer.parseInt(datosIngresados[0]) < 0 || Float.parseFloat(datosIngresados[1]) < 0) {
                             JOptionPane.showMessageDialog(null, "Chistoson mi compa");
-                        } else {
-                            solicitudesDepositoListas.addElement(new SolicitudesDeposito(Integer.parseInt(datosIngresados[0]), datosIngresados[1], Float.parseFloat(datosIngresados[1])));
-                            JOptionPane.showMessageDialog(null, "Solicitud de depósito a: '" + datosIngresados[2] + "' ha sido realizada con exito");
+                        }
+                        int s = Integer.parseInt(datosIngresados[0]);
+                       if (clients.get(s)!=null){
+                            solicitudesDepositoListas.addElement(new SolicitudesDeposito(Integer.parseInt(datosIngresados[0]), Integer.parseInt(datosIngresados[1]), datosIngresados[2],Float.parseFloat(datosIngresados[3])));
+                            JOptionPane.showMessageDialog(null, "Solicitud de depósito ha sido realizada con exito");
                             break;
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(null,"ID incorrecto o el cliente no existe");
                         }
 
                 }
                 else {
-                    a = true;
                     break;
                 }
 
             }catch (Exception ex){
                 JOptionPane.showMessageDialog(null,"Error!!!!!!!!!");
+                break;
                 }
             }
-            if (!a){
-            int result =JOptionPane.showConfirmDialog(null,"Agregar otro?");
-            if (result ==JOptionPane.OK_OPTION){
-                while (true) {
-                    try{
-
-
-                        String[] datosIngresados = solicitarDatos3("Ingrese el ID del beneficiario:", "Ingrese el nombre:", "Ingrese el monto:");
-                        if (datosIngresados != null) {
-                            if (Integer.parseInt(datosIngresados[0])<0||Float.parseFloat(datosIngresados[1])<0){
-                                JOptionPane.showMessageDialog(null,"Que intentas mi chaval");
-                            }
-                            else {
-                                solicitudesDepositoListas.addElement(new SolicitudesDeposito(Integer.parseInt(datosIngresados[0]), datosIngresados[2], Float.parseFloat(datosIngresados[1])));
-                                JOptionPane.showMessageDialog(null, "Solicitud de depósito a: '" + datosIngresados[2] + "' ha sido realizada con exito");
-                                int resulf = JOptionPane.showConfirmDialog(null,"Agregar otro?");
-                                if (resulf == JOptionPane.OK_OPTION){
-
-                                }
-                                else {
-                                    break;
-                                }
-                            }
-
-                        }
-                        else {
-                            break;
-                        }
-
-                    }catch (Exception ex){
-                        JOptionPane.showMessageDialog(null,"Error!!!!!!!!!");
-                    }
-                }
-            }
-
-        }});
+            });
         setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG1 (3).jpg", 200, 200, Mill);
         setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG3 (2).jpg", 200, 200, SolicitudDeposito);
         setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG3 (3).jpg", 200, 200, Atender);
@@ -440,10 +556,9 @@ else if (M.isSelected()){
         Atender.addActionListener(e -> {
             if (solicitudesDepositoListas.longitud() > 0) {
 
-                JOptionPane.showMessageDialog(null, solicitudesDepositoListas.longitud()+ " Solicitudes fueron atendidas con exito");
-                banco.atenderDepos(AhorroListas, solicitudesDepositoListas);
-
-            } else {
+                JOptionPane.showMessageDialog(null, solicitudesDepositoListas.longitud() + " Solicitudes fueron atendidas con exito");
+                banco.atenderDepos(AhorroListas, solicitudesDepositoListas, clients);
+            }else {
                 JOptionPane.showMessageDialog(null,"No hay solicitudes las cuales atender");
 
             }
@@ -462,128 +577,67 @@ else if (M.isSelected()){
 
         });
 
-CrearExtrac.addActionListener(e -> {
-    boolean a = true;
-    while(true){
-
-        if (!AhorroListas.esVacia()) {
-            String[] datosIngresados =solicitarDatos4("Ingrese su ID","Ingrese su nombre", "Monto", "Sexo");
-            if (datosIngresados!= null){
+        CrearExtrac.addActionListener(e -> {
             try {
 
-                for (int i = 0; i < AhorroListas.longitud(); i++) {
-                    if (Integer.parseInt(datosIngresados[1]) == AhorroListas.obtener(i).getPos()){
-                        if (Float.parseFloat(datosIngresados[3]) >AhorroListas.obtener(i).getSaldoAct()){
-                            JOptionPane.showMessageDialog(null,"Fondos insuficientes: $" +AhorroListas.obtener(i).getSaldoAct());
-                            return;
-                        }
-                    }
-                    else {
-                        JOptionPane.showMessageDialog(null,"Numero de cuenta no encontrado");
-                    }
-                }
-                if (Float.parseFloat(datosIngresados[3])<0){
-                    JOptionPane.showMessageDialog(null,"Numeros negativos");
+                String[] datosIdCliente = solicitarDatos1("Ingrese su ID");
+                if (datosIdCliente == null) {
                     return;
                 }
-                if (extranjero()) {
-                    String[] dats = solicitarDatos2("Ingrese su nacionalidad", "Ingrese su dirección");
-                    listasExtrac.addElement(new SolicitudesExtracciones(Integer.parseInt(datosIngresados[0]), datosIngresados[1], Float.parseFloat(datosIngresados[2]), datosIngresados[3].charAt(0), dats[0], dats[1]));
 
+                int idCliente = Integer.parseInt(datosIdCliente[0]);
+
+                if (!clients.containsKey(idCliente)) {
+                    JOptionPane.showMessageDialog(null, "No hay ningún cliente asociado con ese ID.");
+                    return;
+                }
+
+                String[] datosExtraccion = solicitarDatos4r("Ingrese el número de cuenta", "Ingrese su nombre", "Monto", "Sexo");
+                if (datosExtraccion == null) {
+                    return;
+                }
+
+                int numeroCuenta = Integer.parseInt(datosExtraccion[0]);
+                float monto = Float.parseFloat(datosExtraccion[2]);
+                String sexo = datosExtraccion[3];
+
+                CuentasAhorros cuenta = clients.get(idCliente).getClistas().obtener(numeroCuenta);
+                if (cuenta == null) {
+                    JOptionPane.showMessageDialog(null, "No existe ninguna cuenta asociada con ese número.");
+                    return;
+                }
+
+                if (monto > cuenta.getSaldoAct()) {
+                    JOptionPane.showMessageDialog(null, "Fondos insuficientes en la cuenta.");
+                    return;
+                }
+
+                if (monto < 0) {
+                    JOptionPane.showMessageDialog(null, "No se puede ingresar un monto negativo.");
+                    return;
+                }
+
+                if (clients.get(idCliente) instanceof Extranjero) {
+                    paises();
+                    String[] datosExtra = solicitarDatos2r("Ingrese su nacionalidad", "Ingrese su dirección");
+                    listasExtrac.addElement(new SolicitudesExtracciones(idCliente, numeroCuenta, datosExtraccion[1], monto, sexo, datosExtra[0], datosExtra[1]));
                 } else {
-                    listasExtrac.addElement(new SolicitudesExtracciones(Integer.parseInt(datosIngresados[0]),datosIngresados[1], Float.parseFloat(datosIngresados[2])));
-
+                    listasExtrac.addElement(new SolicitudesExtracciones(idCliente, numeroCuenta, datosExtraccion[1], monto, sexo));
                 }
-                JOptionPane.showMessageDialog(null, "Solicitud de extraccion realizada con exito");
-                break;
 
-
-            }catch(Exception ex ){
-JOptionPane.showMessageDialog(null,"Datos ingresados no valido");
+                JOptionPane.showMessageDialog(null, "Solicitud de extracción realizada con éxito.");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Ingrese un número válido");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Ocurrió un error: " + ex.getMessage());
             }
+        });
 
-
-    }
-        else {
-            a = false;
-        break;}
-        }else if (AhorroListas.esVacia()){
-           JOptionPane.showMessageDialog(null,"No hay cuentas de ahorro");
-           a = false;
-           break;
-        }
-        else {
-            a = false;
-            break;
-        }
-
-
-}
-if (a){
-    int result = JOptionPane.showConfirmDialog(null,"Agregar otro?");
-    if (result == JOptionPane.OK_OPTION){
-        while(true){
-
-            if (!AhorroListas.esVacia()) {
-                String[] datosIngresados =solicitarDatos4("Ingrese su ID","Ingrese su nombre", "Monto", "Sexo");
-                if (datosIngresados!= null){
-                    try {
-
-                        for (int i = 0; i < AhorroListas.longitud(); i++) {
-                            if (Integer.parseInt(datosIngresados[1]) == AhorroListas.obtener(i).getIdBen()){
-                                if (Float.parseFloat(datosIngresados[3]) >AhorroListas.obtener(i).getSaldoAct()){
-                                    JOptionPane.showMessageDialog(null,"Fondos insuficientes");
-                                }
-                            }
-                        }
-                        if (Float.parseFloat(datosIngresados[3])<0){
-                            JOptionPane.showMessageDialog(null,"Numeros negativos    ");
-                        }
-                        if (extranjero()) {
-                            String[] dats = solicitarDatos2("Ingrese su nacionalidad", "Ingrese su dirección");
-                            listasExtrac.addElement(new SolicitudesExtracciones(Integer.parseInt(datosIngresados[0]), datosIngresados[1], Float.parseFloat(datosIngresados[2]), datosIngresados[3].charAt(0), dats[0], dats[1]));
-
-                        } else {
-                            listasExtrac.addElement(new SolicitudesExtracciones(Integer.parseInt(datosIngresados[0]), datosIngresados[1], datosIngresados[2].charAt(0)));
-
-                        }
-                        JOptionPane.showMessageDialog(null, "Solicitud de extraccion realizada con exito");
-                        int resulf = JOptionPane.showConfirmDialog(null,"Agregar otro?");
-                        if (resulf == JOptionPane.OK_OPTION){
-
-                        }
-                        else {
-                            break;
-                        }
-
-
-                    }catch(Exception ex ){
-                        JOptionPane.showMessageDialog(null,"Datos ingresados no valido");
-                    }
-
-
-                }
-                else {
-
-                    break;}
-            }else if (AhorroListas.esVacia()){
-                JOptionPane.showMessageDialog(null,"No hay cuentas de ahorro");
-                break;
-            }
-            else {
-                break;
-            }
-
-
-        }
-    }
-}
-});
         atenderExtr.addActionListener(e -> {
             if (!AhorroListas.esVacia()){
             if (listasExtrac.longitud()>0){
                 JOptionPane.showMessageDialog(null,listasExtrac.longitud() +" Extracciones fueron atendidas con exito");
-            banco.ExtraerDinero(AhorroListas,listasExtrac);
+            banco.ExtraerDinero(AhorroListas,listasExtrac,clients);
             }
             else{
                 JOptionPane.showMessageDialog(null,"No hay solicitudes pendientes");
@@ -613,7 +667,7 @@ if (a){
             if (solicitudesDepositoListas.longitud() > 0) {
                 StringBuilder solicitudes = new StringBuilder();
                 for (int i = 0; i < solicitudesDepositoListas.longitud(); i++) {
-                    solicitudes.append(i+1).append(". Solicitud de depósito a: ").append(solicitudesDepositoListas.obtener(i).getNombre())
+                    solicitudes.append(i+1).append(". Solicitud de depósito a: ").append(clients.get(solicitudesDepositoListas.obtener(i).numid).name)
                             .append(" por un monto de: $")
                             .append(solicitudesDepositoListas.obtener(i).getMonto())
                             .append("\n");
@@ -628,6 +682,10 @@ if (a){
                     StringBuilder Ahorro = new StringBuilder();
                     for (int i = 0; i < AhorroListas.longitud(); i++) {
                         AhorroListas.obtener(i).setPos(i+1);
+                        for (Clientes client:clients.values()
+                             ) {
+                            client.clistas.obtener(i).setPos(i+1);
+                        }
                         Ahorro.append(i + 1).append(" ").append("ID: ").append(AhorroListas.obtener(i).getIdBen())
                                 .append(" Saldo: $")
                                 .append(AhorroListas.obtener(i).getSaldoAct())
@@ -639,154 +697,83 @@ if (a){
                 }
 //            JOptionPane.showMessageDialog("" +);
         });
-        CrearAh.addActionListener(e->{
-boolean a = true;
+        CrearAh.addActionListener(e -> {
 
-            while (true){
+
+            while (true) {
                 String[] datosIngresados = solicitarDatos2("Ingrese ID:", "Ingrese el saldo:");
-                if (datosIngresados != null){
-                try {
-                    if (datosIngresados.length>=1){
 
-                int idNum = Integer.parseInt(datosIngresados[0]);
-                float saldo = 0;
-                    if (datosIngresados.length == 2 && datosIngresados[1] != null&& !datosIngresados[1].isEmpty()) {
-                        saldo = Float.parseFloat(datosIngresados[1]);
+                if (datosIngresados != null) {
+                    try {
+                        if (datosIngresados.length >= 1) {
+                            int idNum = Integer.parseInt(datosIngresados[0]);
+                            float saldo = datosIngresados.length == 2 ? Float.parseFloat(datosIngresados[1]) : 0;
 
-
-                    }
-                    if (saldo<0||idNum<0){
-                        JOptionPane.showMessageDialog(null,"Negativos?");
-                        return;
-                    }
-                    if (clients.isEmpty()){
-                        JOptionPane.showMessageDialog(null,"No hay clientes");
-                        return;
-                    }
-                CuentasAhorros h = new CuentasAhorros(idNum,saldo);
-                            Clientes cliente = clients.get(idNum);
-                            if (cliente != null) {
-                                cliente.clistas.addElement(h);
-                                AhorroListas.addElement(h);
-//Falta añadir la cuenta a la lista de cuentas del cliente
-                                JOptionPane.showMessageDialog(null, "Cuenta con ID: '" + datosIngresados[0] + "' ha sido creada con exito");
-                                break;
+                            if (saldo < 0 || idNum < 0) {
+                                JOptionPane.showMessageDialog(null, "Los valores ingresados no pueden ser negativos.");
+                                return;
                             }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Datos ingresados no validos");
+
+
+                            registrarTransaccion("Creación de cuenta", idNum, saldo);
+                            // Crear una nueva cuenta de ahorros
+                            CuentasAhorros nuevaCuenta = new CuentasAhorros(idNum, saldo);
+
+                            // Agregar la nueva cuenta a la lista del cliente
+                            clients.get(idNum).getClistas().addElement(nuevaCuenta);
+                            AhorroListas.addElement(nuevaCuenta);
+
+                            // Mostrar mensaje de éxito
+                            JOptionPane.showMessageDialog(null, "La cuenta con ID '" + idNum + "' ha sido creada exitosamente.");
                         }
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(null, "Los datos ingresados no son validos");
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Los datos ingresados no son válidos.");
                     }
                 } else {
-                    a = false;
-                    break;
-                }
-
-
-
-
-            }
-            if (a) {
-                int result = JOptionPane.showConfirmDialog(null, "¿Agregar otro?");
-                if (result == JOptionPane.OK_OPTION) {
-                    while (true) {
-                        String[] datosIngresados = solicitarDatos2("Ingrese ID:", "Ingrese el saldo:");
-                        if (datosIngresados != null) {
-                            try {
-                                if (datosIngresados.length >= 1) {
-
-                                    int idNum = Integer.parseInt(datosIngresados[0]);
-                                    float saldo = 0;
-                                    if (datosIngresados.length == 2 && datosIngresados[1] != null && !datosIngresados[1].isEmpty()) {
-                                        saldo = Float.parseFloat(datosIngresados[1]);
-
-
-                                    }
-                                    if (saldo < 0 || idNum < 0) {
-                                        JOptionPane.showMessageDialog(null, "Negativos?");
-                                        return;
-                                    }
-                                    if (clients.isEmpty()) {
-                                        JOptionPane.showMessageDialog(null, "Debe crear un cliente primero");
-                                        return;
-                                    }
-                                    Clientes cliente = clients.get(Integer.parseInt(datosIngresados[0]));
-
-                                    if (cliente != null && Integer.parseInt(datosIngresados[0]) == clients.get(Integer.parseInt(datosIngresados[0])).getIdben()) {
-                                        AhorroListas.addElement(new CuentasAhorros(idNum, saldo));
-                                        String s = clients.get(Integer.parseInt(datosIngresados[0])).getNacionalidad();
-
-                                        if (s.equalsIgnoreCase("méxico")) {
-                                            if (cliente instanceof Nacionales mexicano) {
-                                                mexicano.getClistas().addElement(new CuentasAhorros(Integer.parseInt(datosIngresados[0]), Float.parseFloat(datosIngresados[1])));
-                                            }
-                                        } else {
-                                            if (cliente instanceof Extranjero extranjero) {
-                                                extranjero.clistas.addElement(new CuentasAhorros(Integer.parseInt(datosIngresados[0]), Float.parseFloat(datosIngresados[1])));
-                                            }
-                                        }
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "El ID recibido no es valido o el cliente no existe");
-                                        break;
-                                    }
-
-
-                                    JOptionPane.showMessageDialog(null, "Cuenta con ID: '" + datosIngresados[0] + "' ha sido creada con exito");
-                                    break;
-
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Datos ingresados no validos");
-                                }
-                            } catch (NumberFormatException ex) {
-                                JOptionPane.showMessageDialog(null, "Los datos ingresados no son validos");
-                            }
-                        } else {
-                            break;
-                        }
-
-
-                    }
-
-
+                   break;
                 }
             }
         });
 
 
+
         MosCueCli.addActionListener(e -> {
-            while (true){ try {
-                String[] ingresarDatos = solicitarDatos1("Ingrese el ID del cliente");
-                if (ingresarDatos != null) {
-                    StringBuilder clienInfo = new StringBuilder();
-                    Clientes cliente = clients.get(Integer.parseInt(ingresarDatos[0]));
-                    if (cliente != null) {
-                        for (int i = 0; i <= cliente.clistas.getSize(); i++) {
-                            if (!cliente.clistas.esVacia()) {
-                                clienInfo.append("Cliente: ").append(cliente.name).append("  ").append(cliente.getIdben()).append("\n");
-                                clienInfo.append("Numero de la cuenta").append(cliente.clistas.obtener(i).getPos()).append("\n");
-                                clienInfo.append("Saldo").append(cliente.clistas.obtener(i).getSaldoAct());
-                            } else {
-                                JOptionPane.showMessageDialog(null, "No hay cuentas");
-                                return;
-                            }
+            while (true) {
+                try {
+                    String[] ingresarDatos = solicitarDatos1("Ingrese el ID del cliente");
+                    if (ingresarDatos != null) {
 
+                        StringBuilder clienInfo = new StringBuilder();
+                        int clienteID = Integer.parseInt(ingresarDatos[0]);
+                        Clientes cliente = clients.get(clienteID);
+                        for (int i = 0; i < clients.get(clienteID).clistas.longitud(); i++) {
+                            cliente.clistas.obtener(i).setPos(i+1);
                         }
+                        if (cliente != null) {
+                            if (!cliente.clistas.esVacia()) {
+                                clienInfo.append("Cliente: ").append(cliente.getName()).append("  ID: ").append(cliente.getIdben()).append("\n");
+                                for (int i = 0; i < cliente.clistas.longitud(); i++) {
+                                    clienInfo.append("Numero de la cuenta: ").append(cliente.clistas.obtener(i).getPos()).append("\n");
+                                    clienInfo.append("Saldo: ").append(cliente.clistas.obtener(i).getSaldoAct()).append("\n\n");
+                                }
 
-                        JOptionPane.showMessageDialog(null, clienInfo.toString());
-                        break;
+                            } else {
+                                clienInfo.append("El cliente no tiene cuentas asociadas.");
+                            }
+                            JOptionPane.showMessageDialog(null, clienInfo.toString());
+                            break;
+                        } else {
+                            JOptionPane.showMessageDialog(null, "El ID es incorrecto o el cliente no existe");
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(null, "El ID es incorrecto o el cliente no existe");
+                        break;
                     }
-                } else {
-break;
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Algo salió mal");
                 }
-            }catch (Exception ex){
-                JOptionPane.showMessageDialog(null,"Algo fue mal");
-
             }
+        });
 
-        }});
         MosExtr.addActionListener(e ->{
             if (listasExtrac.longitud()>0){
                 StringBuilder Extract = new StringBuilder();
@@ -833,16 +820,11 @@ break;
                 try {
                     String[] ingresarDatos = solicitarDatos6("Ingresar numero de identificacion", "Ingresar nombre completo", "Sexo", "Ingresar direccion", "¿Es el cliente extranjero?");
                     if (ingresarDatos != null) {
-
-                    String[] paises1 = {"Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Barbados", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Ciudad del Vaticano", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guyana", "Guinea", "Guinea ecuatorial", "Guinea-Bisáu", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Macedonia del Norte", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumanía", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Suazilandia", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"
-                    };
-                    String[] codPais = {"AF", "AL", "DE", "AD", "AO", "AG", "SA", "DZ", "AR", "AM", "AU", "AT", "AZ", "BS", "BD", "BB", "BH", "BE", "BZ", "BJ", "BY", "MM", "BO", "BA", "BW", "BR", "BN", "BG", "BF", "BI", "BT", "CV", "KH", "CM", "CA", "QA", "TD", "CL", "CN", "CY", "VA", "CO", "KM", "KP", "KR", "CI", "CR", "HR", "CU", "DK", "DM", "EC", "EG", "SV", "AE", "ER", "SK", "SI", "ES", "US", "EE", "ET", "PH", "FI", "FJ", "FR", "GA", "GM", "GE", "GH", "GD", "GR", "GT", "GY", "GN", "GQ", "GW", "HT", "HN", "HU", "IN", "ID", "IQ", "IR", "IE", "IS", "MH", "SB", "IL", "IT", "JM", "JP", "JO", "KZ", "KE", "KG", "KI", "KW", "LA", "LS", "LV", "LB", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MY", "MW", "MV", "ML", "MT", "MA", "MU", "MR", "FM", "MD", "MC", "MN", "ME", "MZ", "NA", "NR", "NP", "NI", "NE", "NG", "NO", "NZ", "OM", "NL", "PK", "PW", "PA", "PG", "PY", "PE", "PL", "PT", "GB", "CF", "CZ", "CG", "CD", "DO", "RW", "RO", "RU", "WS", "KN", "SM", "VC", "LC", "ST", "SN", "RS", "SC", "SL", "SG", "SY", "SO", "LK", "SZ", "ZA", "SD", "SS", "SE", "CH", "SR", "TH", "TZ", "TJ", "TL", "TG", "TO", "TT", "TN", "TM", "TR", "TV", "UA", "UG", "UY", "UZ", "VU", "VE", "VN", "YE", "DJ", "ZM", "ZW"};
-
-                    for (int i = 0; i < paises1.length; i++) {
-                        paises.put(codPais[i], paises1[i]);
-
-                        comboBox = new JComboBox<>(paises1);
-                    }
+                    if (clients.containsKey(Integer.parseInt(ingresarDatos[0]))){
+                        JOptionPane.showMessageDialog(null,"Ya hay un cliente con ese ID");
+                        return;
+                        }
+                        paises();
                         Clientes ho;
                         if (ingresarDatos[4].equals("SI")) {
                             JPanel jPanel = combobox();
@@ -851,10 +833,12 @@ break;
                             ho = new Extranjero(clients.size(), Integer.parseInt(ingresarDatos[0]), ingresarDatos[1], ingresarDatos[2], ingresarDatos[3], "");
                             ho.setNacionalidad(nacionalidad);
                             clients.put(Integer.parseInt(ingresarDatos[0]), ho);
+                            JOptionPane.showMessageDialog(null,"El cliente ha sido creado");
 
                         } else if (ingresarDatos[4].equals("NO")) {
                             ho = new Nacionales(clients.size(), Integer.parseInt(ingresarDatos[0]), ingresarDatos[1], ingresarDatos[2], ingresarDatos[3], "México");
                             clients.put(Integer.parseInt(ingresarDatos[0]),ho);
+                            JOptionPane.showMessageDialog(null,"El cliente ha sido creado");
                         }
                         else break;
                 }  else {
@@ -866,6 +850,68 @@ break;
 
 
         }});
+        prueba.addActionListener(e -> {
+            try {
+                // Generar un ID único para el cliente
+                int id = clients.size() + 1;
+
+                // Verificar si el ID ya existe
+                if (clients.containsKey(id)) {
+                    JOptionPane.showMessageDialog(null, "Error: El ID generado ya está en uso.");
+                    return;
+                }
+
+                // Crear un nuevo cliente extranjero como prueba
+                Clientes nuevoCliente = new Extranjero(id, id, "Cliente Prueba " + id, "M", "Dirección de Prueba " + id, "País de Prueba");
+
+                // Agregar el nuevo cliente a la lista de clientes
+                clients.put(id, nuevoCliente);
+
+                // Solicitar saldo para la cuenta
+                float saldo = 1000; // Por ejemplo, saldo inicial de $1000
+
+                // Crear una nueva cuenta de ahorros con el mismo ID que el cliente
+                CuentasAhorros nuevaCuenta = new CuentasAhorros(id, saldo);
+// Crear una nueva cuenta de ahorros con el mismo ID que el cliente
+
+// Obtener la lista de cuentas del cliente extranjero y agregar la nueva cuenta
+                Listas<CuentasAhorros> cuentasCliente = nuevoCliente.getClistas();
+                if (cuentasCliente != null) {
+                    int sizeBefore =  cuentasCliente.getSize();
+                    cuentasCliente.addElement(nuevaCuenta);
+                    int sizeAfter = cuentasCliente.getSize();
+
+                    // Imprimir el tamaño antes y después de agregar la nueva cuenta
+                    System.out.println("Tamaño de la lista antes de agregar: " + sizeBefore);
+                    System.out.println("Tamaño de la lista después de agregar: " + sizeAfter);
+                } else {
+                    System.out.println("Error: La lista de cuentas del cliente es null.");
+                }
+
+
+                // Obtener la lista de cuentas del cliente extranjero y agregar la nueva cuenta
+
+                // Agregar la nueva cuenta a la lista general de cuentas de ahorro
+                AhorroListas.addElement(nuevaCuenta);
+
+                // Registrar la transacción
+                registrarTransaccion("Creación de cuenta (Prueba)", id, saldo);
+
+                // Mostrar mensaje de éxito
+                JOptionPane.showMessageDialog(null, "Cliente de prueba y cuenta asociada creados exitosamente con ID: " + id);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Error: El ID generado no es válido.");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al agregar cliente y cuenta de prueba: " + ex.getMessage());
+            }
+        });
+
+
+
+
+
+
+
 
         mostrarClientes.addActionListener(e ->  {
             StringBuilder clientesInfo = new StringBuilder();
@@ -891,6 +937,19 @@ break;
                     }
                     JOptionPane.showMessageDialog(null,clientesInfo.toString(),"Todos los clientes",JOptionPane.PLAIN_MESSAGE);
     });}
+
+    private void paises() {
+        String[] paises1 = {"Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Barbados", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Ciudad del Vaticano", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guyana", "Guinea", "Guinea ecuatorial", "Guinea-Bisáu", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Macedonia del Norte", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumanía", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Suazilandia", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"
+        };
+        String[] codPais = {"AF", "AL", "DE", "AD", "AO", "AG", "SA", "DZ", "AR", "AM", "AU", "AT", "AZ", "BS", "BD", "BB", "BH", "BE", "BZ", "BJ", "BY", "MM", "BO", "BA", "BW", "BR", "BN", "BG", "BF", "BI", "BT", "CV", "KH", "CM", "CA", "QA", "TD", "CL", "CN", "CY", "VA", "CO", "KM", "KP", "KR", "CI", "CR", "HR", "CU", "DK", "DM", "EC", "EG", "SV", "AE", "ER", "SK", "SI", "ES", "US", "EE", "ET", "PH", "FI", "FJ", "FR", "GA", "GM", "GE", "GH", "GD", "GR", "GT", "GY", "GN", "GQ", "GW", "HT", "HN", "HU", "IN", "ID", "IQ", "IR", "IE", "IS", "MH", "SB", "IL", "IT", "JM", "JP", "JO", "KZ", "KE", "KG", "KI", "KW", "LA", "LS", "LV", "LB", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MY", "MW", "MV", "ML", "MT", "MA", "MU", "MR", "FM", "MD", "MC", "MN", "ME", "MZ", "NA", "NR", "NP", "NI", "NE", "NG", "NO", "NZ", "OM", "NL", "PK", "PW", "PA", "PG", "PY", "PE", "PL", "PT", "GB", "CF", "CZ", "CG", "CD", "DO", "RW", "RO", "RU", "WS", "KN", "SM", "VC", "LC", "ST", "SN", "RS", "SC", "SL", "SG", "SY", "SO", "LK", "SZ", "ZA", "SD", "SS", "SE", "CH", "SR", "TH", "TZ", "TJ", "TL", "TG", "TO", "TT", "TN", "TM", "TR", "TV", "UA", "UG", "UY", "UZ", "VU", "VE", "VN", "YE", "DJ", "ZM", "ZW"};
+
+        for (int i = 0; i < paises1.length; i++) {
+            paises.put(codPais[i], paises1[i]);
+
+            comboBox = new JComboBox<>(paises1);
+        }
+    }
+
     public boolean extranjero(){
         JPanel messagePanel = new JPanel();
         messagePanel.add(new JLabel("¿Es usted extranjero?"));

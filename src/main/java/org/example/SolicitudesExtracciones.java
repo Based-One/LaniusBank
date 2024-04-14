@@ -3,19 +3,29 @@ package org.example;
 public class SolicitudesExtracciones extends Solicitudes {
     private String nacionalidad;
     private String direccion;
-    private char sex;
+    private String sex;
 
 
-    public SolicitudesExtracciones(int numid, String nombre, float monto, char sex, String nacionalidad, String direccion) {
-        super(numid, nombre, monto);
+    public SolicitudesExtracciones(int numid, int idCuenta, String nombre, float monto, String sex, String nacionalidad, String direccion) {
+        super(numid,idCuenta, nombre, monto);
         this.nacionalidad = nacionalidad;
         this.sex = sex;
         this.direccion = direccion;
     }
-    public SolicitudesExtracciones(int numid, String nombre, float monto){
-        super(numid,nombre,monto);
+    public SolicitudesExtracciones(int numid, int idCuenta,String nombre, float monto,String sex){
+        super(numid,idCuenta,nombre,monto);
+        this.sex = sex;
 
     }
+
+
+
+    @Override
+    public void movimiento(float cantidad, CuentasAhorros cuenta) {
+        cuenta.setSaldoAct(cuenta.getSaldoAct() - cantidad);
+
+    }
+
 
     public String getNacionalidad() {
         return nacionalidad;
@@ -44,12 +54,13 @@ public class SolicitudesExtracciones extends Solicitudes {
 
 
  */
-    public char getSex() {
+    public String getSex() {
         return sex;
     }
 
-    public void setSex(char sex) {
+    public void setSex(String sex) {
         this.sex = sex;
     }
+
 
 }

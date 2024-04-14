@@ -4,10 +4,12 @@ public abstract class Solicitudes {
     protected String nombre;
     protected int numid;
     protected float monto;
+    protected  int idCuenta;
 
-    public Solicitudes(int numid, String nombre, float monto) {
+    public Solicitudes(int numid, int idCuenta, String nombre, float monto) {
         this.nombre = nombre;
         this.numid = numid;
+        this.idCuenta = idCuenta;
         this.monto = monto;
     }
 
@@ -36,5 +38,6 @@ public abstract class Solicitudes {
     public void setMonto(float monto) {
         this.monto = monto;
     }
+public abstract void movimiento(float cantidad, CuentasAhorros cuenta);
 }
 

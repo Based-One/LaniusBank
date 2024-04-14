@@ -37,7 +37,7 @@ public class Listas<A> implements Imetodos<A>, Serializable {
         if (esVacia()){
             return 0;
         }
-        return size+1;
+        return size;
     }
 
     @Override
@@ -51,7 +51,8 @@ public class Listas<A> implements Imetodos<A>, Serializable {
                 actual = actual.siguiente;
             }
             actual.siguiente = nuevoNodo;
-            size++;}
+        }
+        size++;
     }
 
     //    @Override
