@@ -13,6 +13,13 @@ public abstract class Solicitudes {
         this.monto = monto;
     }
 
+    public int getIdCuenta() {
+        return idCuenta;
+    }
+
+    public void setIdCuenta(int idCuenta) {
+        this.idCuenta = idCuenta;
+    }
 
     public String getNombre() {
         return nombre;

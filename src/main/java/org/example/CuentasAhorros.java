@@ -3,14 +3,16 @@ package org.example;
 public class CuentasAhorros  {
     private int idBen;
     private float saldoAct;
-    private int pos;
+    private int NumCu;
 
     public CuentasAhorros(int idBen, float saldoAct) {
         this.idBen = idBen;
         this.saldoAct = saldoAct;
     }
-    public CuentasAhorros(int idBen){
-
+    public CuentasAhorros(int idBen, int NumCu, float saldoAct) {
+        this.idBen = idBen;
+        this.NumCu = NumCu;
+        this.saldoAct = saldoAct;
     }
 
     public int getIdBen() {
@@ -29,12 +31,12 @@ public class CuentasAhorros  {
         this.saldoAct = saldoAct;
     }
 
-    public int getPos() {
-        return pos;
+    public int getNumCu() {
+        return NumCu;
     }
 
-    public void setPos(int pos) {
-        this.pos = pos;
+    public void setNumCu(int numCu) {
+        this.NumCu = numCu;
     }
 
 }
