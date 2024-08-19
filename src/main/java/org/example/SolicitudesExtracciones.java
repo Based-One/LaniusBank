@@ -44,7 +44,6 @@ public class SolicitudesExtracciones extends Solicitudes {
     @Override
     public void movimiento(float cantidad, CuentasAhorros cuenta) {
         cuenta.setSaldoAct(cuenta.getSaldoAct() - cantidad);
-        RegistroTransacciones.registrarRetiro(this.numid,cuenta.getNumCu(),cantidad);
     }
 }
 

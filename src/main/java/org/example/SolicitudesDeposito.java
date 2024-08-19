@@ -20,7 +20,6 @@ public class SolicitudesDeposito extends Solicitudes{
     @Override
     public void movimiento(float cantidad, CuentasAhorros cuenta) {
         cuenta.setSaldoAct(cantidad +monto);
-        RegistroTransacciones.registrarDeposito(this.numid,cuenta.getNumCu(),cantidad);
     }
 
 

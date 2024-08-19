@@ -55,29 +55,6 @@ public class Listas<A> implements Imetodos<A>, Serializable {
         size++;
     }
 
-    //    @Override
-//    public void insert(A elemento, int indice) {
-//        int contador = 0;
-//        if (indice < 0 || indice > longitud()) {
-//            System.out.println("No existe en la lista");
-//            return;
-//        }
-//
-//        Nodos<A> neuNodo = new Nodos<>(elemento);
-//
-//        if (indice == 0) {
-//            neuNodo.siguiente = cabeza;
-//            cabeza = neuNodo;
-//        } else {
-//            Nodos<A> previo = cabeza;
-//            while (indice<contador){
-//                previo = previo.siguiente;
-//                contador++;
-//            }
-//            neuNodo.siguiente = previo.siguiente;
-//            previo.siguiente = neuNodo;
-//        }
-//    }
     @Override
     public void insert(A elemento, int indice) {
         if (indice < 0 || indice > longitud()) {
@@ -100,26 +77,6 @@ public class Listas<A> implements Imetodos<A>, Serializable {
         }
         size++;
     }
-    //    @Override
-//    public void insert(T elemento, int indice) {
-//        if (indice < 0 || indice > longitud()) {
-//            throw new IndexOutOfBoundsException("Índice fuera de rango");
-//        }
-//
-//        Nodos<T> nuevoNodo = new Nodos<>(elemento);
-//
-//        if (indice == 0) {
-//            nuevoNodo.siguiente = cabeza;
-//            cabeza = nuevoNodo;
-//        } else {
-//            Nodos<T> previo = cabeza;
-//            for (int i = 0; i < indice - 1; i++) {
-//                previo = previo.siguiente;
-//            }
-//            nuevoNodo.siguiente = previo.siguiente;
-//            previo.siguiente = nuevoNodo;
-//        }
-//    }
     public Nodos<A> getPrimero() {
         return cabeza;
     }
@@ -139,47 +96,6 @@ public class Listas<A> implements Imetodos<A>, Serializable {
         return -1;
     }
 
-    //    @Override
-//    public int obtener(int indice) {
-//    Nodos<A> nodoActual = cabeza;
-//    int contador = 0;
-//        if (indice < 0 || indice > longitud()) {
-//            System.out.println("No existe en la lista");
-//            return 0;
-//        }
-//    while (indice>contador) {
-//    nodoActual = nodoActual.siguiente;
-//    contador++;
-//    }
-//    return (int) nodoActual.getDato();
-//
-//        }
-//        @Override
-//        public A obtener(int indice) {
-//            if (indice < 0 || indice >= longitud()) {
-//                throw new IndexOutOfBoundsException("Índice fuera de los límites de la lista");
-//            }
-//            Nodos<A> nodoActual = cabeza;
-//            for (int i = 0; i < indice; i++) {
-//                nodoActual = nodoActual.siguiente;
-//
-//            }
-//            return nodoActual.getDato();
-//        }
-//        @Override
-//        public A obtener(int indice) {
-//            if (indice < 0 || indice >= longitud()) {
-//                throw new IndexOutOfBoundsException("Índice fuera de los límites de la lista");
-//            }
-//            Nodos<A> nodoActual = cabeza;
-//            for (int i = 0; i < indice; i++) {
-//                if (nodoActual == null) {
-//                    throw new IndexOutOfBoundsException("Índice fuera de los límites de la lista.");
-//                }
-//                nodoActual = nodoActual.siguiente;
-//            }
-//            return nodoActual.getDato();
-//        }
     @Override
     public A obtener(int indice) {
         if (indice < 0 || indice >= longitud()) {
@@ -253,21 +169,6 @@ public class Listas<A> implements Imetodos<A>, Serializable {
         return contador;
     }
 
-    //        public void imprimirLista() {
-//            if (esVacia()) {
-//                System.out.println("La lista está vacía.");
-//                return;
-//            }
-//
-//            Nodos<A> actual = cabeza;
-//
-//            System.out.print("Lista: ");
-//            while (actual != null) {
-//                System.out.print(actual.siguiente + " ");
-//                actual = actual.siguiente;
-//            }
-//            System.out.println(); // Agrega un salto de línea al final para una mejor presentación
-//        }
     public void imprimirLista() {
         Nodos<A> nodoActual = cabeza;
         while (nodoActual != null) {

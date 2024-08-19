@@ -4,6 +4,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 
 
@@ -18,8 +21,8 @@ public String[] solicitarDatos6(String dato0, String dato1, String dato2, String
      JTextField camp5 = new JTextField(5);
 JRadioButton YE  = new JRadioButton("SI");
 JRadioButton NO = new JRadioButton("NO");
-    JRadioButton W = new JRadioButton("F");
-    JRadioButton M = new JRadioButton("M");
+JRadioButton W = new JRadioButton("F");
+JRadioButton M = new JRadioButton("M");
 
     W.setBorderPainted(false);
     M.setBorderPainted(false);
@@ -515,16 +518,62 @@ else if (M.isSelected()){
         }
         return null;
     }
+    public String[] solicitarRadio(String mensaje1) {
+        JTextField campo1 = new JTextField(5);
+        JRadioButton MXN = new JRadioButton("Pesos mexicanos");
+        JRadioButton DI = new JRadioButton("Divisas extranjeras");
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(MXN);
+        buttonGroup.add(DI);
+        Font font = new Font("Times New Roman", Font.PLAIN, 14);
 
 
-    private final Listas<Clientes> millonarios;
+
+        JLabel label1 = new JLabel(mensaje1);
+        label1.setBorder(new EmptyBorder(10, 10, 10, 10));
+        label1.setFont(font);
+
+        // Create a panel with a GridBagLayout
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panel.setBackground(Color.ORANGE);
+
+        // Add the labels and text fields to the panel
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.5;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        panel.add(label1, constraints);
+        constraints.gridy = 1;
+        panel.add(radiobutton(MXN,DI), constraints);
+
+        ActionListener actionListener = e -> {
+            if (MXN.isSelected()) {
+                campo1.setText("MXN");
+            } else if (DI.isSelected()) {
+                campo1.setText("DI");
+            }
+        };
+        MXN.addActionListener(actionListener);
+        DI.addActionListener(actionListener);
+
+        int result = JOptionPane.showConfirmDialog(null, panel,
+                "Ingrese los datos", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            return new String[]{campo1.getText() };
+        }
+        return null;
+    }
+
+    private final HashMap<Integer,Clientes> millonarios;
     private final Listas<CuentasAhorros> millonariosLista;
     private final Listas<SolicitudesExtracciones> listasExtrac;
     private final Listas<Solicitudes> solicitudes;
     private final Banco banco;
     private JPanel mainPanel;
     private JButton SolicitudDeposito,CrearAh,Mill,Atender,MosAho,MosSoli,MosCueCli,MostrarMIll,mostrarClientes, prueba;
-    private JScrollPane scroll1,scroll2,scroll3;
+    private JScrollPane scroll1,scroll3;
     private JButton CrearExtrac;
     private JButton atenderExtr;
     private JButton MosExtr;
@@ -540,17 +589,6 @@ else if (M.isSelected()){
 //    private boolean bankActive;
 //    private Jra
 
-//    private JButton CrearAh;
-//    private JButton Mill;
-//    private JButton Atender;
-//    private JButton MosAho;
-//    private JButton MosSoli;
-//    private JButton Imagen2;
-//    private JButton imagen1Button;
-//    private JButton Imagen3;
-//    private JButton MostrarMIll;
-//    private JButton BANK;
-
     public static void main(String[] args) {
 
         JFrame frame = new JFrame("BancoGUI");
@@ -560,12 +598,12 @@ else if (M.isSelected()){
         frame.setVisible(true);
         Image imageIcon = new ImageIcon("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG1 (2).jpg").getImage();
         frame.setIconImage(imageIcon);
-        frame.setResizable(false);
+        frame.setResizable(true);
     }
     public BancoGUI() {
         this.banco = new Banco();
 this.millonariosLista = new Listas<>();
-        this.millonarios = new Listas<>();
+        this.millonarios = new HashMap<>();
 //        this.bankActive = false;
         this.listasExtrac = new Listas<>();
         this.clients = new HashMap<>();
@@ -576,7 +614,7 @@ this.millonariosLista = new Listas<>();
         SolicitudDeposito.addActionListener(e -> {
             while (true) {
                 try {
-                    // Solicitar ID del beneficiario
+//                     Solicitar ID del beneficiario
                     String[] datosIngresados1 = solicitarDatos1("Ingrese el ID del beneficiario");
                     int idBeneficiario = Integer.parseInt(datosIngresados1[0]);
 
@@ -585,44 +623,82 @@ this.millonariosLista = new Listas<>();
                         JOptionPane.showMessageDialog(null, "ID incorrecto o no existe");
                         break;
                     }
+                    String[] radio = solicitarRadio("Ingrese la moneda");
+                    System.out.println(radio[0]);
+                    if (radio[0].equals("MXN")) {
 
-                    // Verificar si el cliente tiene cuentas asociadas
-                    if (clients.get(idBeneficiario).clistas.esVacia() && clients.get(idBeneficiario) != null) {
-                        // Solicitar nombre y monto para la solicitud de depósito
-                        String[] datosIngresados2 = solicitarDatos2("Ingrese el nombre", "Ingrese el monto");
 
-                        // Crear una instancia de SolicitudDeposito y agregarla a la lista de solicitudes
-                        solicitudes.addElement(new SolicitudesDeposito(idBeneficiario, clients.get(idBeneficiario).clistas.longitud(), datosIngresados2[0], Float.parseFloat(datosIngresados2[1])));
-                        JOptionPane.showMessageDialog(null, "Solicitud de depósito ha sido realizada con éxito");
-                        break;
-                    } else {
-                        // Si el cliente no tiene cuentas asociadas, solicitar datos adicionales para la solicitud de depósito
-                        String[] datosIngresados = solicitarDatos3( "Número de la cuenta", "Ingrese el nombre", "Ingrese el monto:");
+                        // Verificar si el cliente tiene cuentas asociadas
+                        if (clients.get(idBeneficiario).clistas.esVacia() && clients.get(idBeneficiario) != null) {
+                            // Solicitar nombre y monto para la solicitud de depósito
+                            String[] datosIngresados2 = solicitarDatos2("Ingrese el nombre", "Ingrese el monto");
 
-                        // Verificar si los datos ingresados son válidos
-                        if (datosIngresados != null) {
-                            if (Integer.parseInt(datosIngresados[0]) < 0 || Float.parseFloat(datosIngresados[1]) < 0) {
-                                JOptionPane.showMessageDialog(null, "Por favor ingrese valores válidos");
-                            } else {
-                                int idCliente = Integer.parseInt(datosIngresados1[0]);
-                                // Verificar si el ID del cliente es válido
-                                if (clients.get(idCliente) != null) {
-                                    // Crear una instancia de SolicitudDeposito y agregarla a la lista de solicitudes
-                                    solicitudes.addElement(new SolicitudesDeposito(idCliente, Integer.parseInt(datosIngresados[0]), datosIngresados[1], Float.parseFloat(datosIngresados[2])));
-                                    JOptionPane.showMessageDialog(null, "Solicitud de depósito ha sido realizada con éxito");
-                                    break;
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "ID incorrecto o el cliente no existe");
-                                }
-                            }
-                        } else {
+                            // Crear una instancia de SolicitudDeposito y agregarla a la lista de solicitudes
+                            solicitudes.addElement(new SolicitudesDeposito(idBeneficiario, clients.get(idBeneficiario).clistas.longitud(), datosIngresados2[0], Float.parseFloat(datosIngresados2[1])));
+                            JOptionPane.showMessageDialog(null, "Solicitud de depósito ha sido realizada con éxito");
                             break;
+                        } else {
+                            // Si el cliente no tiene cuentas asociadas, solicitar datos adicionales para la solicitud de depósito
+                            String[] datosIngresados = solicitarDatos3("Número de la cuenta", "Ingrese el nombre", "Ingrese el monto:");
+
+                            // Verificar si los datos ingresados son válidos
+                            if (datosIngresados != null) {
+                                if (Integer.parseInt(datosIngresados[0]) < 0 || Float.parseFloat(datosIngresados[2]) < 0) {
+                                    JOptionPane.showMessageDialog(null, "Por favor ingrese valores válidos");
+                                } else {
+                                    int idCliente = Integer.parseInt(datosIngresados1[0]);
+                                    // Verificar si el ID del cliente es válido
+                                    if (clients.get(idCliente) != null) {
+                                        // Crear una instancia de SolicitudDeposito y agregarla a la lista de solicitudes
+                                        solicitudes.addElement(new SolicitudesDeposito(idCliente, Integer.parseInt(datosIngresados[0]), datosIngresados[1], Float.parseFloat(datosIngresados[2])));
+                                        JOptionPane.showMessageDialog(null, "Solicitud de depósito ha sido realizada con éxito");
+                                        break;
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "ID incorrecto o el cliente no existe");
+                                    }
+                                }
+                            } else {
+                                break;
+                            }
                         }
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Por favor ingrese valores numéricos válidos para el ID y el monto");
-                    break;
+                    } else if (radio[0].equals("DI")) {
+                        // Verificar si el cliente tiene cuentas asociadas
+                        if (clients.get(idBeneficiario).clistas.esVacia() && clients.get(idBeneficiario) != null) {
+                            // Solicitar nombre y monto para la solicitud de depósito
+                            String[] datosIngresados2 = solicitarDatos2("Ingrese el nombre", "Ingrese el monto");
+
+                            // Crear una instancia de SolicitudDeposito y agregarla a la lista de solicitudes
+                            solicitudes.addElement(new SolicitudesDivisas(idBeneficiario, clients.get(idBeneficiario).clistas.longitud() - 1, datosIngresados2[0], Float.parseFloat(datosIngresados2[1])));
+                            JOptionPane.showMessageDialog(null, "Solicitud de depósito ha sido realizada con éxito");
+                            break;
+                        } else {
+                            // Si el cliente no tiene cuentas asociadas, solicitar datos adicionales para la solicitud de depósito
+                            String[] datosIngresados = solicitarDatos3("Número de la cuenta", "Ingrese el nombre", "Ingrese el monto:");
+
+                            // Verificar si los datos ingresados son válidos
+                            if (datosIngresados != null) {
+                                if (Integer.parseInt(datosIngresados[0]) < 0 || Float.parseFloat(datosIngresados[2]) < 0) {
+                                    JOptionPane.showMessageDialog(null, "Por favor ingrese valores válidos");
+                                } else {
+                                    int idCliente = Integer.parseInt(datosIngresados1[0]);
+                                    // Verificar si el ID del cliente es válido
+                                    if (clients.get(idCliente) != null) {
+                                        // Crear una instancia de SolicitudDeposito y agregarla a la lista de solicitudes
+                                        solicitudes.addElement(new SolicitudesDivisas(idCliente, Integer.parseInt(datosIngresados[0]), datosIngresados[1], Float.parseFloat(datosIngresados[2])));
+                                        JOptionPane.showMessageDialog(null, "Solicitud de depósito ha sido realizada con éxito");
+                                        break;
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "ID incorrecto o el cliente no existe");
+                                    }
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+
+                    } else break;
                 } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Algo salió mal");
                     break;
                 }
             }
@@ -632,12 +708,7 @@ this.millonariosLista = new Listas<>();
         setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG1 (3).jpg", 200, 200, Mill);
         setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG3 (2).jpg", 200, 200, SolicitudDeposito);
         setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG3 (3).jpg", 200, 200, Atender);
-//        setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG3.NQLrZK.jpg",200,200,MosAho);
-//        setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/mill.jpg",200,200,MostrarMIll);
-//        setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG4.jpg",200,200,MosSoli);
         setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG4..jpg", 200, 200, CrearAh);
-//            setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG1 (1).jpg",200,200,MosSoli);
-//        setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/Screenshot 2024-03-29 124426.png",500,300, BANK);
         setIconToButton("C:/Users/esteb/IdeaProjects/Software_Bank/src/Images/OIG3 (4).jpg", 200, 200, CrearExtrac);
          MosAho.setToolTipText("Mostrar las cuentas de ahorro");
         Atender.addActionListener(e -> {
@@ -652,10 +723,10 @@ this.millonariosLista = new Listas<>();
         });
 
         Mill.addActionListener(e -> {
-            if (!solicitudes.esVacia()) {
+            if (!clients.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Cuentas de ahorro con más de 1M han sido eliminadas con éxito");
-                banco.bajaAMillonarios(clients,millonarios, millonariosLista);
-            } else if (clients.isEmpty()) {
+                banco.bajaAMillonarios(clients,millonarios);
+            } else {
                 JOptionPane.showMessageDialog(null, "No hay clientes");
             }
 
@@ -721,16 +792,33 @@ this.millonariosLista = new Listas<>();
 
 
         MostrarMIll.addActionListener(e -> {
-            if (millonarios.longitud() > 0) {
+            if (!millonarios.isEmpty()) {
                 StringBuilder millonariosS = new StringBuilder();
-                for (int i = 0; i < millonarios.longitud(); i++) {
-                    millonariosS.append("Cuenta de ahorro con id: ").append(millonarios.obtener(i).getIdben()).append(" y saldo de: $").append(millonarios.obtener(i).getClistas().obtener(i).getSaldoAct()).append("\n");
+                for (Clientes millonario : millonarios.values()) {
+                    // Obtener la lista de cuentas de ahorro del millonario
+                    Listas<CuentasAhorros> cuentasAhorro = millonario.getClistas();
+
+                    // Iterar sobre las cuentas de ahorro del millonario
+                    for (int i = 0; i < cuentasAhorro.longitud(); i++) {
+                        CuentasAhorros cuenta = cuentasAhorro.obtener(i);
+                        // Verificar si el saldo de la cuenta es mayor a un millón
+                        if (cuenta.getSaldoAct() > 1000000) {
+                            millonariosS.append("Nombre: ").append(millonario.name).append("Cuenta de ahorro con id: ").append(millonario.getIdben()).append(" y saldo de: $").append(cuenta.getSaldoAct()).append("\n");
+                        }
+                    }
                 }
-                JOptionPane.showMessageDialog(null, millonariosS.toString());
+
+                if (!millonariosS.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, millonariosS.toString());
+                } else {
+                    JOptionPane.showMessageDialog(null, "No hay cuentas de ahorro con más de 1M");
+                }
             } else {
-                JOptionPane.showMessageDialog(null, "No hay cuentas de ahorro con más de 1M");
+                JOptionPane.showMessageDialog(null, "vacio");
             }
         });
+
+
 
         MosSoli.addActionListener(e -> {
             StringBuilder mensaje = new StringBuilder();
@@ -746,6 +834,11 @@ this.millonariosLista = new Listas<>();
                     mensaje.append("Número de cuenta: ").append(extraccionSolicitud.idCuenta).append("\n");
                     mensaje.append("Monto: ").append(extraccionSolicitud.getMonto()).append("\n");
                     mensaje.append("Número del cliente: ").append(extraccionSolicitud.getNumid()).append("\n");
+                }else if (solicitud instanceof SolicitudesDivisas divisas) {
+                    mensaje.append("Solicitud de Divisa:\n");
+                    mensaje.append("Número de cuenta: ").append(divisas.idCuenta).append("\n");
+                    mensaje.append("Monto: ").append(divisas.getMonto()).append("\n");
+                    mensaje.append("Número del cliente: ").append(divisas.getNumid()).append("\n");
                 }
                 mensaje.append("\n");
             }
@@ -904,9 +997,12 @@ this.millonariosLista = new Listas<>();
             if (!clients.isEmpty()) {
                 try {
                     String[] dato = solicitarDatos1("Ingrese el ID del cliente el cual desea eliminar la cuenta");
-                    int indiceCliente = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese el índice del cliente del cual desea eliminar la cuenta:"));
+                    if (dato == null){
+                        return;
+                    }
+                    int idCliente = Integer.parseInt(dato[0]);
 
-                    if (indiceCliente >= 0 && indiceCliente < clients.size()) {
+                    if (idCliente >= 0 ) {
                         Clientes cliente = clients.get(Integer.parseInt(dato[0]));
 
                         // Verificar si el cliente tiene cuentas asociadas
@@ -987,7 +1083,7 @@ this.millonariosLista = new Listas<>();
                 clients.put(id, nuevoCliente);
 
                 // Solicitar saldo para la cuenta
-                float saldo = 1000; // Por ejemplo, saldo inicial de $1000
+                float saldo = 1000000000; // Por ejemplo, saldo inicial de $1000
 
                 // Crear una nueva cuenta de ahorros con el mismo ID que el cliente
                 CuentasAhorros nuevaCuenta = new CuentasAhorros(id, saldo);
@@ -1023,7 +1119,7 @@ this.millonariosLista = new Listas<>();
                 JOptionPane.showMessageDialog(null, "Error al agregar cliente y cuenta de prueba: " + ex.getMessage());
             }
         });
-
+//MostrarLogs.addActionListener(e -> mostrarLogs());
 
         mostrarClientes.addActionListener(e -> {
             JTextArea clientesInfoTextArea = new JTextArea(20, 50); // Define un JTextArea con tamaño inicial
@@ -1055,7 +1151,7 @@ this.millonariosLista = new Listas<>();
                         clientesInfo.append("Tipo de cliente: Extranjero\n");
                         clientesInfo.append("Número total de cuentas: ").append(extranjero.getClistas().longitud()).append("\n");
                     }
-                    clientesInfo.append("\n");
+                    clientesInfo.append("-----------------------").append("\n");
                 }
             }
 
@@ -1122,6 +1218,37 @@ JTextField c5 = new JTextField();
         pael.add(comboBox);
         return pael;
     }
+//    private void mostrarLogs() {
+//        StringBuilder logs = new StringBuilder();
+//
+//        try {
+//            BufferedReader depositosReader = new BufferedReader(new FileReader(RegistroTransacciones.DEPOSIT_LOG_FILE));
+//            BufferedReader retirosReader = new BufferedReader(new FileReader(RegistroTransacciones.WITHDRAWAL_LOG_FILE));
+//
+//            String line;
+//            logs.append("Registros de Depósitos:\n");
+//            while ((line = depositosReader.readLine()) != null) {
+//                logs.append(line).append("\n");
+//            }
+//
+//            logs.append("\nRegistros de Retiros:\n");
+//            while ((line = retirosReader.readLine()) != null) {
+//                logs.append(line).append("\n");
+//            }
+//
+//            depositosReader.close();
+//            retirosReader.close();
+//        } catch (IOException ex) {
+//            JOptionPane.showMessageDialog(null, "Error al leer los archivos de registro: " + ex.getMessage());
+//            return;
+//        }
+//
+//        JTextArea logsArea = new JTextArea(logs.toString());
+//        JScrollPane scrollPane = new JScrollPane(logsArea);
+//        scrollPane.setPreferredSize(new Dimension(400, 300));
+//
+//        JOptionPane.showMessageDialog(null, scrollPane, "Logs de Depósitos y Retiros", JOptionPane.PLAIN_MESSAGE);
+//    }
 
 
 

@@ -81,10 +81,18 @@ public void divisas(){
                 float monto = depositoSolicitud.getMonto();
 
                 if (clients.containsKey(idCliente)) {
-                    CuentasAhorros cuenta = clients.get(idCliente).getClistas().obtener(numeroCuenta);
+                    Clientes cliente = clients.get(idCliente);
+                    Listas<CuentasAhorros> listaCuentas = cliente.getClistas();
+                    if (listaCuentas.esVacia()) {
+                        // Si la lista de cuentas del cliente está vacía, creamos una nueva cuenta con el monto del depósito
+                        CuentasAhorros nuevaCuenta = new CuentasAhorros(idCliente, numeroCuenta, monto);
+                        listaCuentas.addElement(nuevaCuenta);
+                        System.out.println("Se creó una nueva cuenta para el cliente con ID " + idCliente + " con un saldo inicial de " + monto);
+                    }
+
+                    CuentasAhorros cuenta = listaCuentas.obtener(numeroCuenta);
                     if (cuenta != null) {
                         depositoSolicitud.movimiento(monto, cuenta);
-                        RegistroTransacciones.registrarDeposito(idCliente, numeroCuenta, monto);
                         System.out.println("Depósito de " + monto + " realizado en la cuenta del cliente con ID " + idCliente);
                         solicitudesProcesadas.addElement(depositoSolicitud);
                     } else {
@@ -93,7 +101,32 @@ public void divisas(){
                 } else {
                     System.out.println("Error: No se encontró ningún cliente con el ID " + idCliente);
                 }
-            } else if (solicitud instanceof SolicitudesExtracciones extraccionSolicitud) {
+            } else if (solicitud instanceof SolicitudesDivisas divisas) {
+                int idCliente = divisas.getNumid();
+                int numeroCuenta = divisas.idCuenta;
+                float monto = divisas.getMonto();
+                if (clients.containsKey(idCliente)) {
+                    Clientes cliente = clients.get(idCliente);
+                    Listas<CuentasAhorros> listaCuentas = cliente.getClistas();
+                    if (listaCuentas.esVacia()) {
+                        // Si la lista de cuentas del cliente está vacía, creamos una nueva cuenta con el monto especificado
+                        CuentasAhorros nuevaCuenta = new CuentasAhorros(idCliente, numeroCuenta, monto);
+                        listaCuentas.addElement(nuevaCuenta);
+                        System.out.println("Se creó una nueva cuenta para el cliente con ID " + idCliente + " con un saldo inicial de " + monto);
+                    }
+
+                    CuentasAhorros cuenta = listaCuentas.obtener(numeroCuenta);
+                    if (cuenta != null) {
+                        divisas.movimiento(monto, cuenta);
+                        solicitudesProcesadas.addElement(divisas);
+                    } else {
+                        System.out.println("Error: No se encontró la cuenta asociada al cliente con ID " + idCliente);
+                    }
+                } else {
+                    System.out.println("Error: No se encontró ningún cliente con el ID " + idCliente);
+                }
+            }
+            else if (solicitud instanceof SolicitudesExtracciones extraccionSolicitud) {
                 int idCliente = extraccionSolicitud.getNumid();
                 int numeroCuenta = extraccionSolicitud.idCuenta;
                 float monto = extraccionSolicitud.getMonto();
@@ -103,12 +136,28 @@ public void divisas(){
                     if (cuenta != null) {
                         if (monto <= cuenta.getSaldoAct()) {
                             extraccionSolicitud.movimiento(monto, cuenta);
-                            RegistroTransacciones.registrarRetiro(idCliente, numeroCuenta, monto);
                             System.out.println("Extracción de " + monto + " realizada en la cuenta del cliente con ID " + idCliente);
                             solicitudesProcesadas.addElement(extraccionSolicitud);
                         } else {
                             System.out.println("Error: Fondos insuficientes en la cuenta del cliente con ID " + idCliente);
                         }
+                    } else {
+                        System.out.println("Error: No se encontró la cuenta asociada al cliente con ID " + idCliente);
+                    }
+                } else {
+                    System.out.println("Error: No se encontró ningún cliente con el ID " + idCliente);
+                }
+            } else if (solicitud instanceof SolicitudesDivisas divisasSolicitud) {
+                int idCliente = divisasSolicitud.getNumid();
+                int numeroCuenta = divisasSolicitud.idCuenta;
+                float monto = divisasSolicitud.getMonto();
+
+                if (clients.containsKey(idCliente)) {
+                    CuentasAhorros cuenta = clients.get(idCliente).getClistas().obtener(numeroCuenta);
+                    if (cuenta != null) {
+                        divisasSolicitud.movimiento(monto, cuenta);
+                        System.out.println("Solicitud de divisas de " + monto + " procesada para el cliente con ID " + idCliente);
+                        solicitudesProcesadas.addElement(divisasSolicitud);
                     } else {
                         System.out.println("Error: No se encontró la cuenta asociada al cliente con ID " + idCliente);
                     }
@@ -176,25 +225,12 @@ public void divisas(){
             System.out.println("Número de identidad no encontrado, favor de crear una nueva cuenta");
         }
 
-//        if (extracciones.obtener(j).getNumid() == cuentasAhorros.obtener(i).getIdBen()) {
-//            if (Integer.parseInt(extracciones.obtener(i).getMonto()) > cuentasAhorros.obtener(i).getSaldoAct()) {
-//                System.out.println("No hay fondos suficientes");
-//            } else if (Integer.parseInt(extracciones.obtener(i).getMonto())  <= cuentasAhorros.obtener(i).getSaldoAct()) {
-//                cuentasAhorros.obtener(i).setSaldoAct(cuentasAhorros.obtener(i).getSaldoAct() - extra);
-//                System.out.println("Se ha retirado: " + Integer.parseInt(extracciones.obtener(i).getMonto()) + " de su cuenta existosamente");
-//                System.out.println("Saldo restante: " + cuentasAhorros.obtener(i).getSaldoAct());
-//            } else {
-//                System.out.println("Numero de identidad no encontrado, favor de crear una nueva cuenta");
-//            }
-//
-//
-//            break;
-//        }}
+
             }
 
 
 
-//}
+
     public void imprimirListaCuentas(Listas<CuentasAhorros> cuentasAhorros) {
         if (cuentasAhorros.esVacia()) {
             System.out.println("La lista de cuentas de ahorro está vacía.");
@@ -210,111 +246,40 @@ public void divisas(){
         }
     }
 
-    public static void main(String[] args) {
-        // Crear listas de cuentas de ahorros y solicitudes de depósito
-        Listas<CuentasAhorros> cuentasAhorros = new Listas<>();
 
-        Listas<SolicitudesDeposito> solicitudesDeposito = new Listas<>();
-Listas<CuentasAhorros> millonarios = new Listas<>();
-        // Agregar algunas cuentas de ahorros y solicitudes de depósito
-        cuentasAhorros.addElement(new CuentasAhorros(1, 1000));
-        cuentasAhorros.addElement(new CuentasAhorros(2, 2000));
-//        solicitudesDeposito.addElement(new SolicitudesDeposito(1, 15000000, "María"));
-//        solicitudesDeposito.addElement(new SolicitudesDeposito(5, 2500, "Ana"));
-//    solicitudesDeposito.addElement(new SolicitudesDeposito(2,2000000,"Jorgito"));
 
-        // Crear una instancia del banco
-        Banco banco = new Banco(cuentasAhorros, solicitudesDeposito);
-        System.out.println(cuentasAhorros.longitud());
-        // Procesar las solicitudes de depósito
-        System.out.println(cuentasAhorros.longitud());
-        // Realizar la eliminación de cuentas millonarias
-//        banco.bajaAMillonarios(cuentasAhorros, millonarios);
-//        for (int i = 0; i < cuentasAhorros.longitud(); i++) {
-//            System.out.println(cuentasAhorros.obtener(i).getIdBen());
-//        }
-//        banco.imprimirListaCuentas(millonarios);
-    }
+    public void bajaAMillonarios(HashMap<Integer, Clientes> clientes, HashMap<Integer, Clientes> clientesDadosDeBaja) {
+        Listas<Clientes> clientesEli = new Listas<>();
+        Listas<Integer> idsClientesEli = new Listas<>();
 
-//public void bajaAMillonarios(Listas<CuentasAhorros> cuentasAhorros){
-//           Listas<CuentasAhorros> millonarios = new Listas<>();
-//
-//    for (int i = 0; i < cuentasAhorros.longitud(); i++) {
-//        if (cuentasAhorros.obtener(i).getSaldoAct() > 1000000) {
-//            millonarios.addElement(cuentasAhorros.obtener(i));
-//            millonarios.setSize(millonarios.longitud());
-//        }
-//
-//    }
-//    System.out.println("Lista de millonarios:"  );
-//    for (int i = 0; i < millonarios.longitud(); i++) {
-//        System.out.println("ID Beneficiario:" + millonarios.obtener(i).getIdBen() + ", Saldo Actual: " + millonarios.obtener(i).getSaldoAct());
-//
-//    }
-public void bajaAMillonarios(HashMap<Integer, Clientes> clientes, Listas<Clientes> clientesDadosDeBaja, Listas<CuentasAhorros> millonarios) {
-    for (Clientes cliente : clientes.values()) {
-        if (cliente != null) {
-            for (int j = 0; j < cliente.getClistas().longitud(); j++) {
-                CuentasAhorros cuenta = cliente.getClistas().obtener(j);
-                if (cuenta != null && cuenta.getSaldoAct() > 1000000) {
-                    millonarios.addElement(cuenta);
-                    clientesDadosDeBaja.addElement(cliente);
-                    clientes.put(cliente.getIdben(), null);
-                    break;
+        for (int i = 0; i < clientes.size(); i++) {
+            Clientes cliente = clientes.get(clientes.keySet().toArray()[i]);
+            if (cliente != null) {
+                for (int j = 0; j < cliente.getClistas().longitud(); j++) {
+                    CuentasAhorros cuenta = cliente.getClistas().obtener(j);
+                    if (cuenta != null && cuenta.getSaldoAct() > 1000000) {
+                        clientesDadosDeBaja.put(cliente.getIdben(), cliente);
+                        clientesEli.addElement(cliente);
+                        idsClientesEli.addElement(cliente.getIdben());
+                        break;
+                    }
                 }
             }
         }
+
+        for (int i = 0; i < idsClientesEli.longitud(); i++) {
+            clientes.remove(idsClientesEli.obtener(i));
+        }
+
+        HashMap<Integer, Clientes> clientesElim = new HashMap<>();
+        for (int i = 0; i < clientesEli.longitud(); i++) {
+            Clientes cliente = clientesEli.obtener(i);
+            clientesElim.put(cliente.getIdben(), cliente);
+        }
     }
-    System.out.println("Lista de millonarios:");
-    imprimirListaCuentas(millonarios);
-}
-
-//    public void bajaAMillonarios(Listas<CuentasAhorros> cuentasAhorros) {
-//        Listas<CuentasAhorros> millonarios = new Listas<>();
-//        for (int i = 0; i < cuentasAhorros.longitud(); i++) {
-//            CuentasAhorros cuenta = cuentasAhorros.obtener(i);
-//            if (cuenta != null && cuenta.getSaldoAct() > 1000000) {
-//                millonarios.addElement(cuenta);
-//            }
-//        }
-//        System.out.println("Lista de millonarios:");
-//        imprimirListaCuentas(millonarios);
-//
-//        System.out.println("Nueva lista actualizada:");
-//        Listas<CuentasAhorros> nuevasCuentasAhorros = new Listas<>();
-//        for (int i = 0; i < cuentasAhorros.longitud(); i++) {
-//            CuentasAhorros cuenta = cuentasAhorros.obtener(i);
-//            if (cuenta != null && cuenta.getSaldoAct() <= 1000000) {
-//                nuevasCuentasAhorros.addElement(cuenta);
-//            }
-//        }
-//        setCuentasAhorros(nuevasCuentasAhorros);
-//        imprimirListaCuentas(nuevasCuentasAhorros);
-//    }
 
 
-//    public void bajaAMillonarios(Listas<CuentasAhorros> cuentasAhorros) {
-//
-//        int i = 0;
-//        Listas<CuentasAhorros> millonarios = new Listas<>();
-//        while (i < cuentasAhorros.longitud()  ) {
-//            imprimirListaCuentas(cuentasAhorros);
-//            CuentasAhorros cuenta = cuentasAhorros.obtener(i);
-//            if (cuenta != null && cuenta.getSaldoAct() > 1000000) {
-//                millonarios.addElement(cuenta);
-//                cuentasAhorros.eliminarIndex(i);
-//
-//            } else {
-//                i++;
-//            }
-//        }
-//
-//        imprimirListaCuentas(millonarios);
-//        System.out.println("Nueva lista actualizada");
-//        imprimirListaCuentas(cuentasAhorros);
-//
-//
-//    }
+
 
     public Listas<SolicitudesExtracciones> getExtraccionesLista() {
         return extraccionesLista;
